@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Love Letter to You - Ashley + You</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Dancing+Script:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    
+    <style>
+        :root {
+            --blush-rose: #F4C2C2;
+            --warm-cream: #FAF7F0;
+            --dusty-pink: #E8B4B8;
+            --sage-green: #A8B5A0;
+            --rose-gold: #E8B4A0;
+            --lavender: #C8A8D8;
+            --soft-coral: #FFB3BA;
+            --charcoal: #2C2C2C;
+            --warm-gray: #6B6B6B;
+            --burgundy: #8B4B6B;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--warm-cream) 0%, #F5F0E8 100%);
+            color: var(--charcoal);
+            overflow-x: hidden;
+        }
+        
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(45deg, var(--burgundy), var(--rose-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .script-text {
+            font-family: 'Dancing Script', cursive;
+            color: var(--dusty-pink);
+        }
+        
+        .love-letter-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(232, 180, 160, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .love-letter-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(232, 180, 160, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .love-letter-card:hover::before {
+            left: 100%;
+        }
+        
+        .love-letter-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(232, 180, 160, 0.2);
+        }
+        
+        .typewriter-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: var(--burgundy);
+        }
+        
+        .heart-animation {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            font-size: 20px;
+            animation: floatUp 3s ease-out forwards;
+        }
+        
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) scale(1.5);
+            }
+        }
+        
+        .send-btn {
+            background: linear-gradient(135deg, var(--rose-gold), var(--dusty-pink));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(232, 180, 160, 0.4);
+        }
+        
+        .send-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.5s ease;
+        }
+        
+        .send-btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .music-toggle {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: var(--rose-gold);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            font-size: 24px;
+            box-shadow: 0 5px 20px rgba(232, 180, 160, 0.4);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .music-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        .particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .content-layer {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .nav-link {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--rose-gold);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .letter-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            border-left: 4px solid var(--rose-gold);
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .letter-section h3 {
+            color: var(--burgundy);
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: var(--burgundy);
+            text-align: right;
+            margin-top: 2rem;
+        }
+        
+        .floating-hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+        
+        .confetti-heart {
+            position: absolute;
+            font-size: 20px;
+            animation: confettiFall 4s linear forwards;
+        }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .script-text {
+                font-size: 1.5rem;
+            }
+            
+            .love-letter-card {
+                padding: 1.5rem;
+            }
+            
+            .letter-section {
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+            
+            .typewriter-text {
+                font-size: 1.125rem;
+            }
+            
+            .send-btn {
+                padding: 10px 20px;
+                font-size: 0.875rem;
+            }
+            
+            .music-toggle {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                bottom: 1rem;
+                left: 1rem;
+            }
+            
+            /* Reduce particle effects on mobile */
+            .particle-canvas {
+                opacity: 0.7;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .script-text {
+                font-size: 1.25rem;
+            }
+            
+            .love-letter-card {
+                padding: 1rem;
+            }
+            
+            .letter-section {
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .typewriter-text {
+                font-size: 1rem;
+            }
+            
+            .signature {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @keyframes confettiFall {
+            0% {
+                opacity: 1;
+                transform: translateY(-100vh) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particle-container" class="particle-canvas"></div>
+    
+    <!-- Floating Hearts Container -->
+    <div class="floating-hearts-container" id="hearts-container"></div>
+    
+    <div class="content-layer">
+        <!-- Navigation -->
+        <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-pink-100">
+            <div class="max-w-6xl mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="script-text text-2xl font-bold text-pink-400">
+                        Ashley + You
+                    </div>
+                    <div class="hidden md:flex space-x-8">
+                        <a href="index.html" class="nav-link text-gray-700 hover:text-pink-400 font-medium">Home</a>
+                        <a href="timeline.html" class="nav-link text-gray-700 hover:text-pink-400 font-medium">Our Timeline</a>
+                        <a href="gallery.html" class="nav-link text-gray-700 hover:text-pink-400 font-medium">Memories</a>
+                        <a href="love-letter.html" class="nav-link text-pink-400 font-medium">Love Letter</a>
+                    </div>
+                    <div class="md:hidden">
+                        <button id="mobile-menu-btn" class="text-gray-700 hover:text-pink-400">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Header Section -->
+        <section class="pt-32 pb-16 px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="hero-title text-5xl md:text-7xl font-bold mb-6">
+                    My Heart in Words
+                </h1>
+                <p class="script-text text-2xl md:text-3xl mb-8">
+                    A Love Letter to My Beautiful Ashley
+                </p>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                    Every word comes from the deepest part of my heart. This is my love letter to you, 
+                    my beautiful girlfriend, my best friend, my everything.
+                </p>
+            </div>
+        </section>
+        
+        <!-- Love Letter Content -->
+        <section class="pb-20 px-6">
+            <div class="max-w-4xl mx-auto">
+                <div class="love-letter-card rounded-2xl p-8 mb-8">
+                    <div class="text-center mb-8">
+                        <h2 class="script-text text-4xl font-bold mb-4">Dear Ashley,</h2>
+                        <p class="text-gray-600 italic">My love, my heart, my everything...</p>
+                    </div>
+                    
+                    <!-- How We Met Section -->
+                    <div class="letter-section">
+                        <h3 class="text-2xl font-bold">How We Met 💕</h3>
+                        <div class="typewriter-text" id="how-we-met"></div>
+                    </div>
+                    
+                    <!-- What I Love About You Section -->
+                    <div class="letter-section">
+                        <h3 class="text-2xl font-bold">What I Love About You 💖</h3>
+                        <div class="typewriter-text" id="what-i-love"></div>
+                    </div>
+                    
+                    <!-- Our Future Together Section -->
+                    <div class="letter-section">
+                        <h3 class="text-2xl font-bold">Our Future Together ✨</h3>
+                        <div class="typewriter-text" id="our-future"></div>
+                    </div>
+                    
+                    <!-- Every Day With You Section -->
+                    <div class="letter-section">
+                        <h3 class="text-2xl font-bold">Every Day With You 🌸</h3>
+                        <div class="typewriter-text" id="every-day"></div>
+                    </div>
+                    
+                    <!-- Closing -->
+                    <div class="text-center mt-12">
+                        <p class="text-xl text-gray-700 mb-6 leading-relaxed">
+                            Ashley, you are my dream come true. Every day with you is a gift, 
+                            and I promise to cherish and love you more with each passing moment.
+                        </p>
+                        <p class="text-lg text-gray-600 mb-8">
+                            Forever yours, always and completely.
+                        </p>
+                        <div class="signature">
+                            Your Loving Boyfriend 💕
+                        </div>
+                    </div>
+                    
+                    <!-- Send Button -->
+                    <div class="text-center mt-12">
+                        <button class="send-btn" onclick="sendLoveLetter()">
+                            💌 Send This Letter to Ashley
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Music Toggle -->
+        <button class="music-toggle" onclick="toggleMusic()" title="Toggle Romantic Music">
+            🎵
+        </button>
+        
+        <!-- Footer -->
+        <footer class="py-12 px-6 bg-gray-50">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="script-text text-2xl font-bold text-pink-400 mb-4">
+                    Forever and Always
+                </div>
+                <p class="text-gray-500">
+                    Made with 💕 for the most amazing girl in the world
+                </p>
+                <p class="text-sm text-gray-400 mt-2">
+                    © 2024 Our Love Story - Ashley + You
+                </p>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        // Love letter content
+        const letterContent = {
+            howWeMet: `45 days ago, in the virtual world of Roblox Neighbors, something magical happened. I met you - a beautiful soul hidden behind a pixelated avatar. We started talking, and suddenly almost two hours had passed. Time stood still as we connected in ways I never expected. 
+
+When you gave me your Instagram, it felt like the universe was giving me a second chance at something wonderful. Those first DMs, seeing your real smile in your photos, hearing your voice for the first time on that Instagram call - every moment felt like a dream I never wanted to wake up from. 
+
+You changed everything. You made me believe that love can truly bloom in the most unexpected places. From pixels to heart, you became my favorite notification, my favorite person, my favorite everything.`,
+            
+            whatILove: `I love your smile - the way it lights up my entire world even through a screen. I love your laugh - how it makes my heart skip every single time. I love your kindness, your patience, your understanding nature that makes me feel safe to be completely myself. 
+
+I love how we can talk for hours about everything and nothing. I love how you make even the most ordinary moments feel extraordinary. I love your strength, your vulnerability, your beautiful mind that constantly amazes me. 
+
+I love how you support my dreams, how you celebrate my victories, how you comfort me during my lows. I love how you make me want to be a better person every single day. I love how you've become not just my girlfriend, but my best friend, my confidant, my safe place. 
+
+Most of all, I love how you love me - completely, unconditionally, beautifully.`,
+            
+            ourFuture: `When I think about our future, my heart fills with so much hope and excitement. I see us growing together, building a life filled with love, laughter, and endless adventures. I see us creating memories that will last a lifetime - traveling to new places, trying new things, making every moment count. 
+
+I imagine waking up next to you every morning, making you coffee, sharing breakfast while we plan our day. I imagine coming home to you after work, sharing stories about our days, cooking dinner together, falling asleep in each other's arms. 
+
+I see us supporting each other through every challenge, celebrating every victory, and loving each other through every season of life. I see us growing old together, still holding hands, still making each other laugh, still falling more in love every single day. 
+
+Our future is bright because it has you in it. And I can't wait to build it together, one beautiful day at a time.`,
+            
+            everyDay: `Every day with you is a gift I never take for granted. From our good morning messages to our good night calls, you make every moment special. 
+
+I cherish our daily routines - the way you check on me, the way we share our days, the way we support each other through everything. I love how we can be silly together, how we can be serious together, how we can be completely ourselves together. 
+
+Every "I love you" we share means the world to me. Every laugh, every tear, every moment of vulnerability brings us closer. You've taught me what true love really means - patience, understanding, forgiveness, growth, and unconditional acceptance. 
+
+You've made me the happiest person in the world, and I promise to spend every day making you feel just as loved, just as cherished, just as special as you make me feel. You are my forever, my always, my everything.`
+        };
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize particle system
+            initParticleSystem();
+            
+            // Initialize typewriter effects
+            initTypewriter();
+            
+            // Add scroll-triggered animations
+            initScrollAnimations();
+        });
+        
+        // Typewriter effects for each section
+        function initTypewriter() {
+            const sections = [
+                { id: 'how-we-met', content: letterContent.howWeMet, delay: 1000 },
+                { id: 'what-i-love', content: letterContent.whatILove, delay: 4000 },
+                { id: 'our-future', content: letterContent.ourFuture, delay: 8000 },
+                { id: 'every-day', content: letterContent.everyDay, delay: 12000 }
+            ];
+            
+            sections.forEach((section, index) => {
+                setTimeout(() => {
+                    new Typed(`#${section.id}`, {
+                        strings: [section.content],
+                        typeSpeed: 30,
+                        showCursor: false,
+                        autoInsertCss: true,
+                        onComplete: function() {
+                            // Add gentle glow effect when typing is complete
+                            document.getElementById(section.id).style.textShadow = '0 0 10px rgba(232, 180, 160, 0.3)';
+                            
+                            // Create floating hearts
+                            createFloatingHearts();
+                        }
+                    });
+                }, section.delay);
+            });
+        }
+        
+        // Create floating hearts animation
+        function createFloatingHearts() {
+            const hearts = ['💕', '💖', '💗', '💓', '💝'];
+            
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart-animation';
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.left = Math.random() * window.innerWidth + 'px';
+                    heart.style.top = window.innerHeight + 'px';
+                    
+                    document.body.appendChild(heart);
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(heart);
+                    }, 3000);
+                }, i * 500);
+            }
+        }
+        
+        // Send love letter functionality
+        function sendLoveLetter() {
+            // Create confetti effect
+            createConfetti();
+            
+            // Show success message
+            const originalText = event.target.textContent;
+            event.target.textContent = '💖 Letter Sent to Ashley!';
+            event.target.disabled = true;
+            
+            setTimeout(() => {
+                event.target.textContent = originalText;
+                event.target.disabled = false;
+            }, 3000);
+            
+            // Scroll to top with smooth animation
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // Create confetti effect
+        function createConfetti() {
+            const hearts = ['💕', '💖', '💗', '💓', '💝', '💞', '💘'];
+            const container = document.getElementById('hearts-container');
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'confetti-heart';
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDelay = Math.random() * 2 + 's';
+                    
+                    container.appendChild(heart);
+                    
+                    setTimeout(() => {
+                        container.removeChild(heart);
+                    }, 4000);
+                }, i * 100);
+            }
+        }
+        
+        // Scroll animations
+        function initScrollAnimations() {
+            const letterSections = document.querySelectorAll('.letter-section');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        anime({
+                            targets: entry.target,
+                            translateX: [-50, 0],
+                            opacity: [0, 1],
+                            duration: 800,
+                            easing: 'easeOutExpo'
+                        });
+                    }
+                });
+            }, { threshold: 0.3 });
+            
+            letterSections.forEach(section => {
+                observer.observe(section);
+            });
+        }
+        
+        // Music toggle (placeholder)
+        function toggleMusic() {
+            const btn = event.target;
+            if (btn.textContent === '🎵') {
+                btn.textContent = '🔇';
+                // In a real implementation, you would play romantic music here
+                console.log('Playing romantic music...');
+            } else {
+                btn.textContent = '🎵';
+                console.log('Music paused...');
+            }
+        }
+        
+        // Particle system (simplified version)
+        function initParticleSystem() {
+            new p5(function(p) {
+                let particles = [];
+                let numParticles = 20;
+                
+                p.setup = function() {
+                    let canvas = p.createCanvas(p.windowWidth, p.windowHeight);
+                    canvas.parent('particle-container');
+                    
+                    for (let i = 0; i < numParticles; i++) {
+                        particles.push(new HeartParticle(p));
+                    }
+                };
+                
+                p.draw = function() {
+                    p.clear();
+                    
+                    for (let particle of particles) {
+                        particle.update();
+                        particle.display();
+                    }
+                };
+                
+                p.windowResized = function() {
+                    p.resizeCanvas(p.windowWidth, p.windowHeight);
+                };
+                
+                function HeartParticle(p) {
+                    this.x = p.random(p.width);
+                    this.y = p.random(p.height);
+                    this.size = p.random(5, 12);
+                    this.speed = p.random(0.1, 0.5);
+                    this.opacity = p.random(0.05, 0.1);
+                    this.drift = p.random(-0.1, 0.1);
+                    
+                    this.update = function() {
+                        this.y -= this.speed;
+                        this.x += this.drift;
+                        
+                        if (this.y < -50) {
+                            this.y = p.height + 50;
+                            this.x = p.random(p.width);
+                        }
+                    };
+                    
+                    this.display = function() {
+                        p.push();
+                        p.translate(this.x, this.y);
+                        p.fill(232, 180, 160, this.opacity * 255);
+                        p.noStroke();
+                        
+                        p.ellipseMode(p.CENTER);
+                        p.ellipse(-this.size/4, -this.size/4, this.size/2, this.size/2);
+                        p.ellipse(this.size/4, -this.size/4, this.size/2, this.size/2);
+                        p.triangle(-this.size/2, -this.size/4, this.size/2, -this.size/4, 0, this.size/2);
+                        
+                        p.pop();
+                    };
+                }
+            });
+        }
+        
+        // Add romantic cursor effects
+        document.addEventListener('mousemove', function(e) {
+            if (Math.random() < 0.05) {
+                createHeartAtCursor(e.clientX, e.clientY);
+            }
+        });
+        
+        function createHeartAtCursor(x, y) {
+            const hearts = ['💕', '💖', '💗', '💓'];
+            const heart = document.createElement('div');
+            heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+            heart.style.position = 'fixed';
+            heart.style.left = x + 'px';
+            heart.style.top = y + 'px';
+            heart.style.pointerEvents = 'none';
+            heart.style.zIndex = '1000';
+            heart.style.fontSize = '16px';
+            heart.style.opacity = '0.6';
+            
+            document.body.appendChild(heart);
+            
+            anime({
+                targets: heart,
+                translateY: -30,
+                opacity: [0.6, 0],
+                scale: [1, 0.8],
+                duration: 2000,
+                easing: 'easeOutQuad',
+                complete: function() {
+                    document.body.removeChild(heart);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

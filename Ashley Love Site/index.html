@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashley + Youcef - Our Love Story</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Dancing+Script:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.0/echarts.min.js"></script>
+    
+    <!-- Splide CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+    
+    <style>
+        :root {
+            --blush-rose: #F4C2C2;
+            --warm-cream: #FAF7F0;
+            --dusty-pink: #E8B4B8;
+            --sage-green: #A8B5A0;
+            --rose-gold: #E8B4A0;
+            --lavender: #C8A8D8;
+            --soft-coral: #FFB3BA;
+            --charcoal: #2C2C2C;
+            --warm-gray: #6B6B6B;
+            --burgundy: #8B4B6B;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--warm-cream) 0%, #F5F0E8 100%);
+            color: var(--charcoal);
+            overflow-x: hidden;
+        }
+        
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(45deg, var(--burgundy), var(--rose-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .script-text {
+            font-family: 'Dancing Script', cursive;
+            color: var(--dusty-pink);
+        }
+        
+        .floating-heart {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(232, 180, 160, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .glow-effect:hover {
+            box-shadow: 0 0 30px rgba(232, 180, 160, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .heart-meter {
+            background: linear-gradient(90deg, var(--dusty-pink) 0%, var(--rose-gold) 100%);
+            border-radius: 20px;
+            height: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .heart-meter::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, var(--soft-coral) 0%, var(--burgundy) 100%);
+            border-radius: 20px;
+            animation: fillHeart 2s ease-out;
+        }
+        
+        @keyframes fillHeart {
+            from { width: 0%; }
+            to { width: 85%; }
+        }
+        
+        .achievement-badge {
+            background: linear-gradient(135deg, var(--rose-gold), var(--dusty-pink));
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .script-text {
+                font-size: 1.5rem;
+            }
+            
+            .floating-heart {
+                font-size: 3rem;
+            }
+            
+            .achievement-badge {
+                width: 60px;
+                height: 60px;
+                font-size: 0.875rem;
+            }
+            
+            .story-card {
+                padding: 1.5rem;
+            }
+            
+            /* Reduce particle effects on mobile */
+            .particle-canvas {
+                opacity: 0.7;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .script-text {
+                font-size: 1.25rem;
+            }
+            
+            .floating-heart {
+                font-size: 2.5rem;
+            }
+            
+            .grid.grid-cols-2.md\\:grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+        }
+        
+        .content-layer {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .nav-link {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--rose-gold);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .story-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(232, 180, 160, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(232, 180, 160, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particle-container" class="particle-canvas"></div>
+    
+    <div class="content-layer">
+        <!-- Navigation -->
+        <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-pink-100">
+            <div class="max-w-6xl mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="script-text text-2xl font-bold text-pink-400">
+                        Ashley + Youcef
+                    </div>
+                    <div class="hidden md:flex space-x-8">
+                        <a href="index.html" class="nav-link text-gray-700 hover:text-pink-400 font-medium">Home</a>
+                        <a href="timeline.html" class="nav-link text-gray-700 hover:text-pink-400 font-medium">Our Timeline</a>
+                        <a href="gallery.html" class="nav-link text-gray-700 hover:text-pink-400 font-medium">Memories</a>
+                        <a href="love-letter.html" class="nav-link text-gray-700 hover:text-pink-400 font-medium">Love Letter</a>
+                    </div>
+                    <div class="md:hidden">
+                        <button id="mobile-menu-btn" class="text-gray-700 hover:text-pink-400">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Hero Section -->
+        <section class="min-h-screen flex items-center justify-center pt-20 px-6">
+            <div class="max-w-6xl mx-auto text-center">
+                <div class="mb-8">
+                    <h1 class="hero-title text-6xl md:text-8xl font-bold mb-4">
+                        Ashley + Youcef
+                    </h1>
+                    <p class="script-text text-3xl md:text-4xl mb-6">
+                        Love Found in the Digital World
+                    </p>
+                    <div class="max-w-2xl mx-auto">
+                        <p id="hero-story" class="text-lg text-gray-600 leading-relaxed"></p>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-6 md:space-y-0 md:space-x-8 mb-12">
+                    <div class="text-center">
+                        <div class="floating-heart text-6xl mb-2">💕</div>
+                        <p class="text-sm text-gray-500">Together</p>
+                        <div id="days-counter" class="text-2xl font-bold text-pink-400">45</div>
+                        <p class="text-sm text-gray-500">Days</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="floating-heart text-6xl mb-2" style="animation-delay: 0.5s;">💖</div>
+                        <p class="text-sm text-gray-500">Love Level</p>
+                        <div class="heart-meter w-32 mx-auto mt-2"></div>
+                        <p class="text-sm text-gray-500 mt-1">100%</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="floating-heart text-6xl mb-2" style="animation-delay: 1s;">💗</div>
+                        <p class="text-sm text-gray-500">Memories</p>
+                        <div class="text-2xl font-bold text-pink-400">∞</div>
+                        <p class="text-sm text-gray-500">And counting</p>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="timeline.html" class="glow-effect bg-gradient-to-r from-pink-400 to-rose-400 text-white px-8 py-3 rounded-full font-semibold hover:from-pink-500 hover:to-rose-500 transition-all">
+                        Explore Our Timeline
+                    </a>
+                    <a href="gallery.html" class="glow-effect bg-white text-pink-400 border-2 border-pink-400 px-8 py-3 rounded-full font-semibold hover:bg-pink-50 transition-all">
+                        View Memories
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Achievement Badges -->
+        <section class="py-20 px-6">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold text-center mb-12 text-gray-800">Our Special Moments</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <div class="text-center">
+                        <div class="achievement-badge mx-auto mb-4">🎮</div>
+                        <h3 class="font-semibold text-gray-700">First Meeting</h3>
+                        <p class="text-sm text-gray-500">Roblox Neighbors</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="achievement-badge mx-auto mb-4">📱</div>
+                        <h3 class="font-semibold text-gray-700">Instagram</h3>
+                        <p class="text-sm text-gray-500">First Exchange</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="achievement-badge mx-auto mb-4">📞</div>
+                        <h3 class="font-semibold text-gray-700">First Call</h3>
+                        <p class="text-sm text-gray-500">Late Night Talks</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="achievement-badge mx-auto mb-4">💌</div>
+                        <h3 class="font-semibold text-gray-700">Confession</h3>
+                        <p class="text-sm text-gray-500">"I Want You"</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Story Preview -->
+        <section class="py-20 px-6 bg-gradient-to-br from-pink-50 to-rose-50">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold text-center mb-12 text-gray-800">Our Beautiful Beginning</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="story-card rounded-2xl p-8">
+                        <div class="text-4xl mb-4">🎮</div>
+                        <h3 class="text-2xl font-bold mb-4 text-pink-400">The Game That Changed Everything</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            It started in Roblox Neighbors - a chance encounter that would change both our lives forever. 
+                            We talked for almost two hours straight, connecting in ways I never expected. Even when the game 
+                            kicked me out for being AFK, I knew I had found someone special.
+                        </p>
+                    </div>
+                    
+                    <div class="story-card rounded-2xl p-8">
+                        <div class="text-4xl mb-4">💕</div>
+                        <h3 class="text-2xl font-bold mb-4 text-pink-400">From Pixels to Heart</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            When you gave me your Instagram, it felt like the universe was giving me a second chance. 
+                            Those late-night calls, the way we could talk for hours about everything and nothing... 
+                            I knew I had to tell you how I felt. "I want you" - three words that changed everything.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-12">
+                    <a href="love-letter.html" class="glow-effect bg-gradient-to-r from-rose-400 to-pink-400 text-white px-8 py-4 rounded-full text-lg font-semibold hover:from-rose-500 hover:to-pink-500 transition-all">
+                        Read My Love Letter to You
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="py-12 px-6 bg-gray-50">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="script-text text-2xl font-bold text-pink-400 mb-4">
+                    Forever Yours, Always
+                </div>
+                <p class="text-gray-500">
+                    Made with 💕 for the most amazing girl in the world
+                </p>
+                <p class="text-sm text-gray-400 mt-2">
+                    © 2024 Our Love Story - Ashley + Youcef
+                </p>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="main.js"></script>
+</body>
+</html>
